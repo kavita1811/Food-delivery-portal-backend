@@ -51,7 +51,6 @@ public class CustomerService {
     public LoginResponse login(LoginRequest loginRequest) {
         if (commonUtils.validateEmail(loginRequest.getEmail())
                 || commonUtils.validatePassword(loginRequest.getPassword())) {
-
             Customer customer = customerRepository.findByEmail(loginRequest.getEmail());
             if (customer == null) {
                 throw new RuntimeException("Customer does not exist");
@@ -59,14 +58,11 @@ public class CustomerService {
                 String token = UUID.randomUUID().toString();
                 customer.setToken(token);
                 customerRepository.save(customer);
-
-
                 LoginResponse loginResponse = new LoginResponse();
                 loginResponse.setEmail(customer.getEmail());
                 loginResponse.setName(customer.getName());
                 loginResponse.setContact(customer.getContact());
                 loginResponse.setToken(customer.getToken());
-
                 return loginResponse;
             }
         } else {
@@ -102,7 +98,7 @@ public class CustomerService {
                 || !commonUtils.validatePassword(signUpRequest.getPassword())
                 || !signUpRequest.getPassword().equals(signUpRequest.getConfirmPassword())
                 || !commonUtils.validatePhoneNumber(signUpRequest.getContact())) {
-            System.out.println("Invalid request");
+            log.info("Invalid request");
             return false;
         }
         return true;
