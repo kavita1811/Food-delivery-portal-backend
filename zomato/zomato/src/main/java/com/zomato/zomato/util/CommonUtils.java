@@ -19,6 +19,7 @@ public class CommonUtils {
     public boolean validatePassword(String password) {
         return password.matches(passwordRegex);
     }
+
     public boolean validatePhoneNumber(String phoneNumber) {
         String regex = "^[0-9]{10}$";
         Pattern pattern = Pattern.compile(regex);
