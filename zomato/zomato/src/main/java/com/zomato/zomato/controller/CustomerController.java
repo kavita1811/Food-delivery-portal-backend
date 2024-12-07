@@ -21,13 +21,13 @@ public class CustomerController {
 
     @PostMapping("/sign-up")
     public SignUpResponse signUp(@RequestBody SignUpRequest signUpRequest) {
-        log.info("Request Till Sign-up Controller {}", signUpRequest);
+        log.info("Request payload for signUp {}", signUpRequest);
         return customerService.signUp(signUpRequest);
     }
 
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest loginRequest){
-        log.info("Request Till Login Controller {}", loginRequest);
+        log.info("Request payload for login {}", loginRequest);
         return customerService.login(loginRequest);
     }
 

@@ -30,20 +30,16 @@ public class CustomerService {
 
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
         log.info("In signUp service");
-        boolean validRequest = validateSignUpRequest(signUpRequest);
-        if (validRequest) {
-            Customer customer = customerRepository.findByEmail(signUpRequest.getEmail());
-            if (Objects.nonNull(customer)) {
-                throw new RuntimeException("Customer already Exists");
-            }
-            customer = createNewCustomer(signUpRequest, customer);
-            SignUpResponse signUpResponse = new SignUpResponse();
-            signUpResponse.setCustomerId(customer.getId());
-            signUpResponse.setMessage("Customer Created Successfully");
-            return signUpResponse;
-        } else {
-            throw new RuntimeException("Invalid Request");
+        validateSignUpRequest(signUpRequest);
+        Customer customer = customerRepository.findByEmail(signUpRequest.getEmail());
+        if (Objects.nonNull(customer)) {
+            throw new RuntimeException("Customer already Exists");
         }
+        customer = createNewCustomer(signUpRequest, customer);
+        SignUpResponse signUpResponse = new SignUpResponse();
+        signUpResponse.setCustomerId(customer.getId());
+        signUpResponse.setMessage("Customer Created Successfully");
+        return signUpResponse;
     }
 
 //Login method
@@ -99,7 +95,7 @@ public class CustomerService {
                 || !signUpRequest.getPassword().equals(signUpRequest.getConfirmPassword())
                 || !commonUtils.validatePhoneNumber(signUpRequest.getContact())) {
             log.info("Invalid request");
-            return false;
+            throw new RuntimeException("Invalid Request");
         }
         return true;
     }
