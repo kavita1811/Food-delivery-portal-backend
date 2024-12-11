@@ -42,31 +42,6 @@ public class CustomerService {
         return signUpResponse;
     }
 
-//Login method
-
-    public LoginResponse login(LoginRequest loginRequest) {
-        if (commonUtils.validateEmail(loginRequest.getEmail())
-                || commonUtils.validatePassword(loginRequest.getPassword())) {
-            Customer customer = customerRepository.findByEmail(loginRequest.getEmail());
-            if (customer == null) {
-                throw new RuntimeException("Customer does not exist");
-            } else {
-                String token = UUID.randomUUID().toString();
-                customer.setToken(token);
-                customerRepository.save(customer);
-                LoginResponse loginResponse = new LoginResponse();
-                loginResponse.setEmail(customer.getEmail());
-                loginResponse.setName(customer.getName());
-                loginResponse.setContact(customer.getContact());
-                loginResponse.setToken(customer.getToken());
-                return loginResponse;
-            }
-        } else {
-            throw new RuntimeException("Invalid ID or Password");
-        }
-
-    }
-
     private Customer createNewCustomer(SignUpRequest signUpRequest, Customer customer) {
         log.info("Creating a new Customer ");
         customer = new Customer();
@@ -98,5 +73,30 @@ public class CustomerService {
             throw new RuntimeException("Invalid Request");
         }
         return true;
+    }
+
+//Login method
+
+    public LoginResponse login(LoginRequest loginRequest) {
+        if (commonUtils.validateEmail(loginRequest.getEmail())
+                || commonUtils.validatePassword(loginRequest.getPassword())) {
+            Customer customer = customerRepository.findByEmail(loginRequest.getEmail());
+            if (customer == null) {
+                throw new RuntimeException("Customer does not exist");
+            } else {
+                String token = UUID.randomUUID().toString();
+                customer.setToken(token);
+                customerRepository.save(customer);
+                LoginResponse loginResponse = new LoginResponse();
+                loginResponse.setEmail(customer.getEmail());
+                loginResponse.setName(customer.getName());
+                loginResponse.setContact(customer.getContact());
+                loginResponse.setToken(customer.getToken());
+                return loginResponse;
+            }
+        } else {
+            throw new RuntimeException("Invalid ID or Password");
+        }
+
     }
 }
