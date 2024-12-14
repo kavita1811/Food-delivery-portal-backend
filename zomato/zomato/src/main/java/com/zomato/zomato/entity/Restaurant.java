@@ -11,7 +11,6 @@ public class Restaurant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-
     private String contact;
     private String email;
     private String cuisineType;

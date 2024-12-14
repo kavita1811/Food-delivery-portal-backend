@@ -5,6 +5,7 @@ import com.zomato.zomato.entity.Customer;
 import com.zomato.zomato.repository.CustomerRepository;
 import com.zomato.zomato.request.LoginRequest;
 import com.zomato.zomato.request.SignUpRequest;
+import com.zomato.zomato.response.AddressResponse;
 import com.zomato.zomato.response.LoginResponse;
 import com.zomato.zomato.response.SignUpResponse;
 import com.zomato.zomato.util.CommonUtils;
@@ -13,10 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
@@ -27,7 +26,7 @@ public class CustomerService {
 
     @Autowired
     private CustomerRepository customerRepository;
-
+//Sign-Up
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
         log.info("In signUp service");
         validateSignUpRequest(signUpRequest);
@@ -41,7 +40,7 @@ public class CustomerService {
         signUpResponse.setMessage("Customer Created Successfully");
         return signUpResponse;
     }
-
+//Create new customer
     private Customer createNewCustomer(SignUpRequest signUpRequest, Customer customer) {
         log.info("Creating a new Customer ");
         customer = new Customer();
@@ -74,9 +73,7 @@ public class CustomerService {
         }
         return true;
     }
-
 //Login method
-
     public LoginResponse login(LoginRequest loginRequest) {
         if (commonUtils.validateEmail(loginRequest.getEmail())
                 || commonUtils.validatePassword(loginRequest.getPassword())) {
@@ -97,6 +94,35 @@ public class CustomerService {
         } else {
             throw new RuntimeException("Invalid ID or Password");
         }
-
+    }
+//TO display Address List
+    public List<AddressResponse> getAllAddressesByCustomerId(Long customerId) {
+        try {
+            Optional<Customer> customer = customerRepository.findById(customerId);
+            if (customer.isEmpty()) {
+                throw new RuntimeException("No Customer available for this ID");
+            }
+            List<Address> addressList = customer.get().getAddresses();
+            if(customer.get().getAddresses().isEmpty()){
+                throw new RuntimeException("No Addresses available");
+            }
+            List<AddressResponse> addressResponses = addressList.stream().map(address -> {
+                AddressResponse addressResponse = new AddressResponse();
+                addressResponse.setId(address.getId());
+                addressResponse.setFlat(address.getFlat());
+                addressResponse.setArea(address.getArea());
+                addressResponse.setCity(address.getCity());
+                addressResponse.setState(address.getState());
+                addressResponse.setPinCode(address.getPinCode());
+                return addressResponse;
+            }).collect(Collectors.toList());
+            return addressResponses;
+        } catch (NullPointerException nullPointerException) {
+            log.error("Null Pointer Exception occurred", nullPointerException);
+            throw new NullPointerException("Something went wrong");
+        } catch (Exception e) {
+            log.error("Exception occurred", e);
+            throw new RuntimeException(e);
+        }
     }
 }

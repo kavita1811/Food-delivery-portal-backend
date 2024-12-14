@@ -11,4 +11,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity runtimeExceptionHandler(RuntimeException e) {
         return ResponseEntity.ok(e.getMessage());
     }
+    @ExceptionHandler(NoRestaurantsAvailableException.class)
+    public ResponseEntity noRestaurantsAvailableExceptionHandler(NoRestaurantsAvailableException e) {
+        return ResponseEntity.ok(e.getMessage());
+    }
 }

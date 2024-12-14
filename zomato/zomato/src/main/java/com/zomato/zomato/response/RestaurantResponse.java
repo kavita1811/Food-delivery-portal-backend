@@ -16,7 +16,6 @@ public class RestaurantResponse {
     private String email;
     private String cuisineType;
     private double rating;
-    private List<DishResponse> dishes;
 
     public Long getId() {
         return id;
@@ -74,11 +73,4 @@ public class RestaurantResponse {
         this.rating = rating;
     }
 
-    public List<DishResponse> getDishes() {
-        return dishes;
-    }
-
-    public void setDishes(List<DishResponse> dishes) {
-        this.dishes = dishes;
-    }
 }

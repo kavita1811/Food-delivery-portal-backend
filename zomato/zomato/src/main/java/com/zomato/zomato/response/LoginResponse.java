@@ -1,7 +1,5 @@
 package com.zomato.zomato.response;
 
-import java.util.UUID;
-
 public class LoginResponse {
     private String name;
     private String email;
